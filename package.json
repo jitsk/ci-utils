@@ -1,0 +1,9 @@
+{
+  "name": "ci-utils",
+  "version": "0.0.1",
+  "description": "Common utility library for CI projects",
+  "main": "ci-utils.js",
+  "dependencies": {    
+    "underscore": "1.8.3"
+  }
+}
