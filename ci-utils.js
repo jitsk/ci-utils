@@ -1,5 +1,8 @@
 var _ 			= require('underscore');
 
+// Global config - should be supplied at point of inclusion
+utils_config = {};
+
 var configOK = function(utils_config) {
 
 	// This utility class expects a range of config values to be supplied.
@@ -43,57 +46,20 @@ var configOK = function(utils_config) {
 	
 }
 
-module.exports = function(utils_config) {
+module.exports = function(init_config) {
 
-	if(_.isUndefined(utils_config)) {
-		var utils_config = {};
+	if(_.isUndefined(init_config)) {
+		var init_config = {};
 	}	
-	utils_config = configOK(utils_config);
+	utils_config = configOK(init_config);
 
-
-
-
-
+	var api = require('./includes/api.js');
 	
-	
-
-	
-	
-	// Receive a log request with some params
-	var logger = function(method, url, data) {
-
-		console.log('logger function called...');
-		console.log(utils_config.logger.host);
-
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	// Receive an API request with some params
-	var api = function(method, url, data, callback) {
-
-		console.log('api function called...');
-		console.log(utils_config.api_request.host);
-		console.log(utils_config.api_request.port);
-
-	}
-
-
-
-
+	var logger = require('./includes/logger.js');
 
 	return { 
-		api: api, 
-		logger: logger
+		api: api.api, 
+		logger: logger.logger
 	};
 	
 }
