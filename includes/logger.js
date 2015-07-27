@@ -14,29 +14,29 @@ var logger = function(method, url, params) {
 	method = method.toLowerCase().trim();
 	
 	if(method !== 'post' && method !== 'get' && method !== 'delete' && method !== 'put') {
-		err.push('Unrecognised \'method\' parameter for logger: ' + method);			
+		err.push('Unrecognised \'method\' parameter for ci-utils logger: ' + method);			
 	}
 	
 	if(_.isUndefined(url)) {
 		url = '';
-		err.push('Undefined \'url\' parameter for logger');	
+		err.push('Undefined \'url\' parameter for ci-utils logger');	
 	}
 	url = url.trim();
 	
 	if(_.isUndefined(params)) {
 		params = {};
 	} else if(!_.isObject(params)) {
-		err.push('Unrecognised \'params\' parameter for logger');	
+		err.push('Unrecognised \'params\' parameter for ci-utils logger');	
 	}
 
 	// Fallen at first hurdle?	
 	if(!_.isEmpty(err)) {
 	
 		console.log('====================================================');
-		console.log('LOGGER ERROR RESPONSE');
+		console.log('CI-UTILS LOGGER ERROR RESPONSE');
 		console.log(JSON.stringify(err,null,2));
 		console.log('');
-		console.log('LOGGER ERROR ORIGINAL CALL');
+		console.log('CI-UTILS LOGGER ERROR ORIGINAL CALL');
 		console.log(JSON.stringify(opts,null,2));
 	
 	} else {
@@ -52,7 +52,7 @@ var logger = function(method, url, params) {
 			opts.form = params;
 		}
 
-		request(opts, function(err, r, b) {
+		request(opts, function(error, response, body) {
 
 			var errobj = {
 				request: null,
@@ -61,40 +61,40 @@ var logger = function(method, url, params) {
 
 			// Format the body
 			try {
-				b = JSON.parse(b);
+				body = JSON.parse(body);
 			}
 
 			catch (exception) {
-				var original_b = b;
-				var b = {};
+				var original_body = body;
+				var body = {};
 			}
 
 			// Defensive code around the response
-			if (!_.isObject(r)) {
-				var r = {};
+			if (!_.isObject(response)) {
+				var response = {};
 			}
 			
-			if (err || r.statusCode !== 200 || b.success === false) {
+			if (error || response.statusCode !== 200 || (!_.isUndefined(body.success) && body.success === false)) {
 
 				// Negative response :(
 	
-				if (!_.isNull(err)) {
-					errobj.request = err.code;
+				if (!_.isNull(error)) {
+					errobj.request = error.code;
 				}
 
-				else if (_.isObject(b) && !_.isUndefined(b.errors)) {
-					errobj.api = b.errors;
+				else if (!_.isUndefined(body.errors)) {
+					errobj.api = body.errors;
 				}
 
 				else {
-					errobj.request = original_b;
+					errobj.request = original_body;
 				}
 
 				console.log('====================================================');
-				console.log('LOGGER ERROR RESPONSE');
+				console.log('CI-UTILS LOGGER ERROR RESPONSE');
 				console.log(JSON.stringify(errobj,null,2));
 				console.log('');
-				console.log('LOGGER ERROR ORIGINAL CALL');
+				console.log('CI-UTILS LOGGER ERROR ORIGINAL CALL');
 				console.log(JSON.stringify(opts,null,2));
 
 			} else {
@@ -102,8 +102,8 @@ var logger = function(method, url, params) {
 				// OK response :)
 				
 				console.log('====================================================');
-				console.log('LOGGER Ops Log Created - ' + moment().format('DD-MM-YYYY HH:mm:ss'));
-				console.log(JSON.stringify(b,null,2));			
+				console.log('CI-UTILS LOGGER Ops Log Created - ' + moment().format('DD-MM-YYYY HH:mm:ss'));
+				console.log(JSON.stringify(body,null,2));			
 			
 			}
 	

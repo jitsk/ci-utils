@@ -1,16 +1,89 @@
-var _ 			= require('underscore');
+var _ 				= require('underscore'),
+		request 	= require('request');
 
 // Receive an API request with some params
-var api = function(method, url, data, callback) {
+var api = function(method, url, params, callback) {
 
-	console.log('api function called...');
-	console.log(utils_config.api_request.host);
-	console.log(utils_config.api_request.port);
+	var err = []; 				// this is any error received from the underlying request library (i.e. timed out, connection reset - hard errors
+	var api_err = null;		// this is any error response from the API called (i.e. invalid parameters)
+	var data = null;			// this is the successful response from the API called
+
+	// Sanitise & verify...	
+	if(_.isUndefined(method)) {
+		method = '';
+	}
+	method = method.toLowerCase().trim();
 	
-	var err = null;
-	var api_err = null;
-	var data = null;
-	return callback(err, api_err, data);
+	if(method !== 'post' && method !== 'get' && method !== 'delete' && method !== 'put') {
+		err.push('Unrecognised \'method\' parameter for ci-utils api: ' + method);			
+	}
+	
+	if(_.isUndefined(url)) {
+		url = '';
+		err.push('Undefined \'url\' parameter for ci-utils api');	
+	}
+	url = url.trim();
+	
+	if(_.isUndefined(params)) {
+		params = {};
+	} else if(_.isFunction(params) && _.isUndefined(callback)) {
+		// No params passed, callback in it's place...
+		callback = params;
+		params = {};
+	} else if(!_.isObject(params)) {
+		err.push('Unrecognised \'params\' parameter for ci-utils api');	
+	}
+
+	// Fallen at first hurdle?	
+	if(!_.isEmpty(err)) {
+	
+		return callback(err, null, null);
+		
+	}
+
+	var opts = {
+		method: method,
+		url: utils_config.api_request.host + (!_.isUndefined(utils_config.api_request.port)?':' + utils_config.api_request.port:'') + url
+	}
+
+	if (method === "get" && !_.isNull(params)) {
+		opts.qs = params;
+	}	else if (!_.isNull(params)) {
+		opts.form = params;
+	}
+
+	request(opts, function(error, response, body) {
+
+		// Format the body
+		try {
+			body = JSON.parse(body);
+		}
+
+		catch (exception) {
+			var original_body = body;
+			var body = {};
+		}
+
+		// Defensive code around the response
+		if (!_.isObject(response)) {
+			var response = {};
+		}
+
+		if (error || response.statusCode !== 200 || (!_.isUndefined(body.success) && body.success === false)) {
+		
+			if(!_.isUndefined(body.errors)) {
+			
+				return callback(null, body.errors, null);
+			
+			}			
+			
+			return callback(null, error, null);
+		
+		}
+		
+		return callback(null, null, body);
+
+	});		
 
 }
 
