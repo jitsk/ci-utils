@@ -4,8 +4,44 @@ var _ 				= require('underscore'),
 // Include 'sibling' logger function
 var logger 		= require('./logger.js').logger;
 
+var configOK = function(utils_config) {
+
+	// Check required config is present and correct (and put in defaults if otherwise)...
+	
+	var err = [];
+	
+	if(_.isUndefined(utils_config.api_request)) {
+		err.push('ci-utils requires an api_request object.');
+	} else {
+		if(_.isUndefined(utils_config.api_request.host)) {
+			err.push('ci-utils requires an api_request.host value.');
+		}
+		if(_.isUndefined(utils_config.api_request.port)) {
+			err.push('ci-utils requires an api_request.host value.');
+		}
+	}
+
+	if(!_.isEmpty(err)) {
+		console.log('');
+		console.log('*** CI-UTILS CONFIG ERROR ***');
+		console.log(JSON.stringify(err,null,2));
+		console.log('*** CI-UTILS CONFIG ERROR ***');
+		console.log('');
+		process.exit();
+	}
+	
+	return utils_config;
+	
+}
+
 // Receive an API request with some params
 var api = function(method, url, params, callback) {
+
+	// Confirm required config is set and available
+	if(_.isUndefined(utils_config)) {
+		var utils_config = {};
+	}	
+	utils_config = configOK(utils_config);
 
 	var err = []; 				// this is any error received from the underlying request library (i.e. timed out, connection reset - hard errors
 	var api_err = null;		// this is any error response from the API called (i.e. invalid parameters)

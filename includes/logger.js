@@ -2,8 +2,41 @@ var _ 				= require('underscore'),
 		request 	= require('request'),
 		moment 		= require('moment');
 
+var configOK = function(utils_config) {
+
+	// Check required config is present and correct (and put in defaults if otherwise)...
+	
+	var err = [];
+	
+	if(_.isUndefined(utils_config.logger)) {
+		err.push('ci-utils requires a logger object.');
+	} else {
+		if(_.isUndefined(utils_config.logger.host)) {
+			err.push('ci-utils requires a logger.host value.');
+		}
+	}
+
+	if(!_.isEmpty(err)) {
+		console.log('');
+		console.log('*** CI-UTILS CONFIG ERROR ***');
+		console.log(JSON.stringify(err,null,2));
+		console.log('*** CI-UTILS CONFIG ERROR ***');
+		console.log('');
+		process.exit();
+	}
+	
+	return utils_config;
+	
+}
+
 // Receive a log request with some params
 var logger = function(method, url, params) {
+
+	// Confirm required config is set and available
+	if(_.isUndefined(utils_config)) {
+		var utils_config = {};
+	}	
+	utils_config = configOK(utils_config);
 
 	// Sanitise & verify...
 	var err = [];
