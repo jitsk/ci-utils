@@ -1,9 +1,8 @@
 var _ 				= require('underscore'),
 		request 	= require('request');
 		
-// Include 'parent' ci-utils function so we can access the logger functionality
-var utils 		= require('../ci-utils')(utils_config);
-var logger 		= utils.logger;
+// Include 'sibling' logger function
+var logger 		= require('./logger.js').logger;
 
 // Receive an API request with some params
 var api = function(method, url, params, callback) {
