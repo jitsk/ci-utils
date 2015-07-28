@@ -1,5 +1,9 @@
 var _ 				= require('underscore'),
 		request 	= require('request');
+		
+// Include 'parent' ci-utils function so we can access the logger functionality
+var utils 		= require('../ci-utils')(utils_config);
+var logger 		= utils.logger;
 
 // Receive an API request with some params
 var api = function(method, url, params, callback) {
@@ -64,23 +68,44 @@ var api = function(method, url, params, callback) {
 			var body = {};
 		}
 
-		// Defensive code around the response
+		// Catch duff response
 		if (!_.isObject(response)) {
 			var response = {};
 		}
 
-		if (error || response.statusCode !== 200 || (!_.isUndefined(body.success) && body.success === false)) {
+		if(error) {
+		
+			// Error making the request, time to log this.
+			
+			var log = { 
+				data: opts,
+				error: error,
+				project: utils_config.project
+			}
+
+			logger('post', '/request/fail', log);
+			
+			return callback(error, null, null);
+		
+		}
+
+		if (response.statusCode !== 200 || (!_.isUndefined(body.success) && body.success === false)) {
 		
 			if(!_.isUndefined(body.errors)) {
 			
+				// Should be a response from the API call made (e.g 'You're missing params X, Y, Z')
 				return callback(null, body.errors, null);
 			
-			}			
-			
-			return callback(null, error, null);
-		
+			}						
+
+			// Error, but no specifics...
+			var e = [];
+			e.push('Error making ' + url + ' API call');
+			return callback(null, e, null);
+				
 		}
 		
+		// All OK
 		return callback(null, null, body);
 
 	});		
