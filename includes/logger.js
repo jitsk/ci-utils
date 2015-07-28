@@ -103,7 +103,7 @@ var logger = function(method, url, params) {
 				}
 
 				console.log('====================================================');
-				console.log('CI-UTILS LOGGER ERROR RESPONSE');
+				console.log('CI-UTILS LOGGER ERROR RESPONSE - ' + moment().format('DD-MM-YYYY HH:mm:ss'));
 				console.log(JSON.stringify(errobj,null,2));
 				console.log('');
 				console.log('CI-UTILS LOGGER ERROR ORIGINAL CALL');
