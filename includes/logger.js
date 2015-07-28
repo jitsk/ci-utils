@@ -28,7 +28,19 @@ var logger = function(method, url, params) {
 	} else if(!_.isObject(params)) {
 		err.push('Unrecognised \'params\' parameter for ci-utils logger');	
 	}
-
+	
+	// Logger is expecting params to resemble
+	// with an error:
+	// { data: { [data] }, error: { [err ] } }
+	// without an error:
+	// { data: { [data] }, error: null }
+	if(_.isUndefined(params.data)) {
+		params.data = {};
+	}
+	if(_.isUndefined(params.error)) {
+		params.error = null;
+	}	
+	
 	// Fallen at first hurdle?	
 	if(!_.isEmpty(err)) {
 	
