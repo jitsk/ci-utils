@@ -1,8 +1,5 @@
 var _ 			= require('underscore');
 
-// Global config - should be supplied at point of inclusion
-utils_config = {};
-
 var configOK = function(utils_config) {
 
 	// Check required config is present and correct (and put in defaults if otherwise)...
@@ -33,13 +30,13 @@ module.exports = function(init_config) {
 	}	
 	utils_config = configOK(init_config);
 
-	var api = require('./includes/api.js');
+	var api = require('./includes/api.js').api(utils_config);
 	
-	var logger = require('./includes/logger.js');
+	var logger = require('./includes/logger.js').logger(utils_config);
 
 	return { 
-		api: api.api, 
-		logger: logger.logger
+		api: api, 
+		logger: logger
 	};
 	
 }
