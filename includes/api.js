@@ -140,7 +140,7 @@ var api = function(config) {
 			}
 			
 			// All OK
-			return callback(null, null, body);
+			return callback(null, null, body.data);
 
 		});
 
