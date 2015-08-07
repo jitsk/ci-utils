@@ -68,16 +68,16 @@ var s3upload = function(config) {
 
       if(err){
         //console.log(err);
-        callback(['Problem uploading your file to s3']);
+        callback(['Problem uploading your file to s3'],{});
       }
       else if(res.statusCode == 200){
-        callback(null,utils_config.s3upload.asset_domain+fileTo);
+        callback(null,{"asset_location":utils_config.s3upload.asset_domain+fileTo});
       }
       else{
         //console.log(res, res.statusCode)
         //Must be some error
         //console.log("CATCH ALL ERROR");
-        callback(['Problem uploading your file to s3 - Status Code ('+res.statusCode+')']);
+        callback(['Problem uploading your file to s3 - Status Code ('+res.statusCode+')'],{});
       }
       
     });
