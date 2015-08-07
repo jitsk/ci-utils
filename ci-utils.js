@@ -33,10 +33,14 @@ module.exports = function(init_config) {
 	var api = require('./includes/api.js').api(utils_config);
 	
 	var logger = require('./includes/logger.js').logger(utils_config);
+	
+	var s3upload = require('./includes/s3upload.js').s3upload(utils_config);
+
 
 	return { 
 		api: api, 
-		logger: logger
+		logger: logger,
+		s3upload: s3upload
 	};
 	
 }
