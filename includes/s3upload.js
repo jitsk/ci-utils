@@ -25,7 +25,11 @@ var configOK = function(utils_config) {
 		
 		if(_.isUndefined(utils_config.s3upload.region)) {
 			err.push('ci-utils requires a s3upload.region value.');
-		}    
+		} 
+		
+		if(_.isUndefined(utils_config.s3upload.region)) {
+			err.push('ci-utils requires a s3upload.asset_domain value.');
+		}       
 		 
 	
 	}
@@ -67,7 +71,7 @@ var s3upload = function(config) {
         callback(['Problem uploading your file to s3']);
       }
       else if(res.statusCode == 200){
-        callback(null);
+        callback(null,utils_config.s3upload.asset_domain+fileTo);
       }
       else{
         //console.log(res, res.statusCode)
