@@ -68,7 +68,7 @@ var s3upload = function(config) {
 										
 												
 		if (publicRead===true) {	
-		   params.x-amz-acl="public-read";
+		   params['x-amz-acl']="public-read";
 		}
                   
     var req = filestore.putFile(fileFrom, fileTo, params, function(err, res){
