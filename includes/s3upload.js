@@ -54,7 +54,7 @@ var s3upload = function(config) {
 	var utils_config = config || {};
 	utils_config = configOK(utils_config);
 
-	return function(fileFrom, fileTo, fileType, callback) {
+	return function(fileFrom, fileTo, fileType, publicRead, callback) {
 	
 		// make amazon s3 thing
 		var filestore = knox.createClient({
@@ -63,8 +63,15 @@ var s3upload = function(config) {
 												bucket: utils_config.s3upload.bucket,
 												region: utils_config.s3upload.region
 										});
+										
+		var params = {"Content-Type": fileType};
+										
+												
+		if (publicRead===true) {	
+		   params.x-amz-acl="public-read";
+		}
                   
-    var req = filestore.putFile(fileFrom, fileTo, {"Content-Type": fileType, "x-amz-acl": "public-read"}, function(err, res){
+    var req = filestore.putFile(fileFrom, fileTo, params, function(err, res){
 
       if(err){
         //console.log(err);
