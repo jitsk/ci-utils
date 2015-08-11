@@ -164,7 +164,8 @@ Any hard errors will already have been logged (and if appropriate) Slack’ed ou
 
 A typical call might look like :
 
-```var params = {
+```
+var params = {
 	name: 'Steve'
 }
 
@@ -178,6 +179,7 @@ api_request('get', '/helloworld', params, function(err, api_err, data) {
   	// API error - maybe we missed a parameter out of our call?
   }
 
-});```
+});
+```
 
 So this makes a GET request to the /helloworld API endpoint, passing in the params required, and back come the two error objects and (in the event of success) response.
