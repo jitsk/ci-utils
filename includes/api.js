@@ -33,14 +33,16 @@ var configOK = function(utils_config) {
 // Receive an API request with some params
 var api = function(config) {
 
-	// Confirm required config is set and available
+	// Confirm  utils_config is set
 	var utils_config = config || {};
-	utils_config = configOK(utils_config);
 
 	// Include 'sibling' logger function
 	var logger = require('./logger.js').logger(utils_config);
 
 	return function(method, url, params, callback) {
+
+		// confirm config is ok
+		utils_config = configOK(utils_config);
 
 		var err = []; 				// this is any error received from the underlying request library (i.e. timed out, connection reset - hard errors
 		var api_err = null;		// this is any error response from the API called (i.e. invalid parameters)

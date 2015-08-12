@@ -32,12 +32,14 @@ var configOK = function(utils_config) {
 // Receive a log request with some params
 var logger = function(config) {
 
-	// Confirm required config is set and available
+	// Confirm  utils_config is set
 	var utils_config = config || {};
-	utils_config = configOK(utils_config);
 
 	return function(method, url, params) {
 
+		// confirm config is ok
+		utils_config = configOK(utils_config);
+		
 		// Sanitise & verify...
 		var err = [];
 		
