@@ -50,12 +50,14 @@ var configOK = function(utils_config) {
 // Receive a log request with some params
 var s3upload = function(config) {
 
-	// Confirm required config is set and available
-	var utils_config = config || {};
-	utils_config = configOK(utils_config);
+	// Confirm  utils_config is set
+  var utils_config = config || {};
 
 	return function(fileFrom, fileTo, fileType, publicRead, callback) {
-	
+	 
+    // confirm config is ok
+    utils_config = configOK(utils_config);
+
 		// make amazon s3 thing
 		var filestore = knox.createClient({
 												key: utils_config.s3upload.key, 
