@@ -136,7 +136,7 @@ var api = function(config) {
 				err.push('Unable to determine success of response');
 			}
 			
-			if(!_.isUndefined(body.success) && body.success == true && _.isUndefined(body.data)) {
+			if(!_.isUndefined(body.success) && body.success === true && _.isUndefined(body.data)) {
 				err.push('Unable to determine data of response');
 			}
 
