@@ -31,6 +31,7 @@ var configOK = function(utils_config) {
 }
 
 // Receive an API request with some params
+// Be wary! This returns 3 params instead of the usual 2! err, api_err, data
 var api = function(config) {
 
 	// Confirm required config is set and available
@@ -92,25 +93,9 @@ var api = function(config) {
 
 		request(opts, function(error, response, body) {
 
-			// Format the body
-			try {
-				body = JSON.parse(body);
-			}
-
-			catch (exception) {
-				var original_body = body;
-				var body = {};
-			}
-
-			// Catch duff response
-			if (!_.isObject(response)) {
-				var response = {};
-			}
-
+			// Straight forward error making the request - log it as a request fail and get out of here
 			if(error) {
-			
-				// Error making the request, time to log this.
-				
+
 				var log = { 
 					data: opts,
 					error: error,
@@ -123,23 +108,66 @@ var api = function(config) {
 			
 			}
 
-			if (response.statusCode !== 200 || (!_.isUndefined(body.success) && body.success === false)) {
+			// This either worked, or we have a more complex error
+			var err = [];
+			var api_err = [];
+			
+			if (!_.isObject(response)) {
+				err.push('Unexpected response returned');
+				var response = {};
+			}
+
+			// Format the body
+			try {
+				body = JSON.parse(body);
+			}
+
+			catch (exception) {
+				err.push('Unexpected body returned');
+				var original_body = body;
+				var body = {};
+			}
+
+			if(_.isUndefined(response.statusCode)) {
+				err.push('Unable to determine statusCode of response');
+			}
+			
+			if(_.isUndefined(body.success)) {
+				err.push('Unable to determine success of response');
+			}
+			
+			if(!_.isUndefined(body.success) && body.success == true && _.isUndefined(body.data)) {
+				err.push('Unable to determine data of response');
+			}
+
+			if(!_.isUndefined(response.statusCode) && response.statusCode !== 200 
+			|| (!_.isUndefined(body.success) && body.success === false)) {
 			
 				if(!_.isUndefined(body.errors)) {
 				
 					// Should be a response from the API call made (e.g 'You're missing params X, Y, Z')
-					return callback(null, body.errors, null);
+					api_err = body.errors;
 				
-				}						
+				}	else {					
 
-				// Error, but no specifics...
-				var e = [];
-				e.push('Error making ' + url + ' API call');
-				return callback(null, e, null);
+					// Error, but no specifics...
+					api_err.push('Error making ' + url + ' API call');
+					
+				}
 					
 			}
 			
-			// All OK
+			// Return api_err	
+			if(!_.isEmpty(api_err)) {			
+				return callback(null, api_err, null);
+			}
+			
+			// Return err
+			if(!_.isEmpty(err)) {			
+				return callback(err, null, null);						
+			}
+
+			// Must all be OK
 			return callback(null, null, body.data);
 
 		});
