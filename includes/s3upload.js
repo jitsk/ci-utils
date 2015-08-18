@@ -1,6 +1,6 @@
 var _ = require('underscore');
-  var knox = require('knox');
-  var moment = require('moment');
+var knox = require('knox');
+var moment = require('moment');
 
 var configOK = function(utils_config) {
 

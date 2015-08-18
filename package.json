@@ -6,6 +6,12 @@
   "dependencies": {    
     "underscore": "1.8.3",
     "request": "2.60.0",
-    "moment": "2.10.5"
+    "moment": "2.10.5",
+    "knox":"0.9.2",
+    "moment": "2.8.3"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "3.1.2"
   }
 }
