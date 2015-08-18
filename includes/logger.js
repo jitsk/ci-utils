@@ -35,7 +35,7 @@ var logger = function(config) {
 	// Confirm  utils_config is set
 	var utils_config = config || {};
 
-	return function(method, url, params) {
+	return function(method, url, params, callback) {
 
 		// confirm config is ok
 		utils_config = configOK(utils_config);
@@ -85,6 +85,11 @@ var logger = function(config) {
 			console.log('');
 			console.log('CI-UTILS LOGGER ERROR ORIGINAL CALL');
 			console.log(JSON.stringify(opts,null,2));
+
+			// if we have a callback, use that
+			if (_.isFunction(callback)) {
+				return callback({ request: null, api: err }, null);
+			}
 		
 		} else {
 		
@@ -147,13 +152,23 @@ var logger = function(config) {
 					console.log('CI-UTILS LOGGER ERROR ORIGINAL CALL');
 					console.log(opts);
 
+					// if we have a callback, use that
+					if (_.isFunction(callback)) {
+						return callback(errobj, null);
+					}
+
 				} else {
 				
 					// OK response :)
 					
 					console.log('====================================================');
 					console.log('CI-UTILS LOGGER Ops Log Created - ' + moment().format('DD-MM-YYYY HH:mm:ss'));
-					console.log(JSON.stringify(body,null,2));			
+					console.log(JSON.stringify(body,null,2));
+
+					// if we have a callback, use that
+					if (_.isFunction(callback)) {
+						return callback(null, body);
+					}	
 				
 				}
 		
