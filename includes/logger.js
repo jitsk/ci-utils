@@ -167,7 +167,12 @@ var logger = function(config) {
 
 					// if we have a callback, use that
 					if (_.isFunction(callback)) {
+
+						if (!_.isUndefined(body.data) && !_.isUndefined(body.data.doc)) {
+							return callback(null, body.data.doc);
+						}
 						return callback(null, body);
+						
 					}	
 				
 				}
