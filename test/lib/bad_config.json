@@ -1,0 +1,18 @@
+{
+  "project": "tests",
+  "logger": {
+    "host": "http://localhost",
+    "port": 1066
+  },
+  "api_request": {
+    "host": "http://localhost",
+    "port": 1111
+  },
+  "s3upload": {
+    "key": "AKIAJWJZMTQVDQ56YSCA",
+    "secret": "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",
+    "bucket": "staging-wolf-assets",
+    "region": "eu-west-1",
+    "asset_domain": "http://s3-eu-west-1.amazonaws.com/staging-wolf-assets/"
+  }
+}

@@ -80,7 +80,7 @@ var s3upload = function(config) {
         callback(['Problem uploading your file to s3'],{});
       }
       else if(res.statusCode == 200){
-        callback(null,{"asset_location":utils_config.s3upload.asset_domain+fileTo});
+        callback(null,{"asset_location":utils_config.s3upload.asset_domain.replace(/\/$/, "")+fileTo});
       }
       else{
         //console.log(res, res.statusCode)
