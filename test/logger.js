@@ -57,7 +57,7 @@ describe("LOGGER", function() {
         data.success.should.be.false;
         data.type.should.be.equal("redshift");
         data.action.should.be.equal("query");
-        data.slack_channel.should.be.equal("redshift");
+        data.slack_channel.should.be.equal("logs-redshift");
 
         return done();
 
