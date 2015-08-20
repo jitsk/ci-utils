@@ -62,14 +62,15 @@ describe("API", function() {
     });
 
     it("should fail to GET /helloworld because the server is not there", function(done) {
-      
+
       var ci_utils_config = require('./lib/bad_config.json');
       var ci_utils = require("../ci-utils.js")(ci_utils_config);
       var api = ci_utils.api;
 
-      api("get", "/hello/world", {}, function(err, api_err, data) {
+      api("get", "/helloworld", {}, function(err, api_err, data) {
 
-        err.should.be.an.Array;
+        err.should.be.an.Object;
+        err.message.should.be.equal("connect ECONNREFUSED");
         (api_err === null).should.be.true;
         (data === null).should.be.true
 

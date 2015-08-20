@@ -104,8 +104,8 @@ var api = function(config) {
 					project: utils_config.project
 				}
 
-				logger('post', '/request/fail', log, function(err, data) {
-					return callback(error, null, null);
+				return logger('post', '/request/fail', log, function(err, data) {
+					callback(error, null, null);
 				});
 			
 			}
